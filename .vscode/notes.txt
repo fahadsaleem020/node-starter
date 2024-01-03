@@ -1,0 +1,4 @@
+include zod verification (signup)
+setup mailer to have dynamic transport protocol
+have literal types for socket events ("connection" , "connect" etc)
+add a authentication for swagger docs
