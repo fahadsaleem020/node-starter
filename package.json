@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
+    "start": "nodemon dist/server.js",
     "dev": "ts-node-dev -r tsconfig-paths/register src/server.ts",
     "dbgenerate": "drizzle-kit generate:mysql",
     "dbpush": "drizzle-kit push:mysql",
@@ -47,12 +48,14 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.6.1",
+    "nodemon": "^3.0.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pino": "^8.16.1",
     "pino-pretty": "^10.2.3",
     "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "tsc-alias": "^1.8.8"
   }
 }
