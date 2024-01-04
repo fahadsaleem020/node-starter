@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && tsc-alias",
+    "build": "tsc && tsc-alias && npm run dbgenerate",
     "start": "nodemon dist/server.js",
     "dev": "ts-node-dev -r tsconfig-paths/register src/server.ts",
     "dbgenerate": "drizzle-kit generate:mysql",
