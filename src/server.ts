@@ -61,7 +61,7 @@ const sessionOptions: SessionOptions = {
 const sessionMiddleware = session(sessionOptions);
 const corsOptions: CorsOptions = {
   credentials: true,
-  origin: process.env.CLIENT_DOMAIN!,
+  origin: process.env.CLIENT_DOMAIN,
 };
 
 if (isProducttion) {
@@ -69,7 +69,7 @@ if (isProducttion) {
   sessionOptions.cookie!.secure = true;
   sessionOptions.cookie!.httpOnly = true;
   sessionOptions.cookie!.sameSite = "lax";
-  sessionOptions.cookie!.domain = process.env.SERVER_DOMAIN!;
+  sessionOptions.cookie!.domain = process.env.CLIENT_DOMAIN;
 }
 
 app.options("*", cors(corsOptions));
