@@ -1,7 +1,7 @@
 import { getHttpStatusCode } from "@/utils/auth";
 import { Request, Response } from "express";
 
-export const logoutController = (req: Request, res: Response) => {
+export default (req: Request, res: Response) => {
   req.logout((error) => {
     if (error)
       return res

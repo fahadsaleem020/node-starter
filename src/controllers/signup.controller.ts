@@ -3,6 +3,7 @@ import { users, verification } from "@/schema/schema";
 import { getHttpStatusCode } from "@/utils/auth";
 import { generateJwt } from "@/utils/common";
 import { Request, Response } from "express";
+import { log } from "@/utils/logger";
 import { hash } from "bcrypt";
 
 export default async (req: Request, res: Response) => {
@@ -53,7 +54,7 @@ export default async (req: Request, res: Response) => {
     //Exception on verification upsert failure.
     throw new Error("something went wrong.");
   } catch (error) {
-    console.log(error);
+    log.error(error);
     res.status(getHttpStatusCode("INTERNAL_SERVER_ERROR")).send(error);
   }
 };

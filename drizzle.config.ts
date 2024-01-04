@@ -7,9 +7,10 @@ export default {
   driver: "mysql2",
   out: "./drizzle",
   dbCredentials: {
+    port: Number(process.env.dbport!),
     password: process.env.password!,
-    host: process.env.host!,
     database: process.env.database!,
+    host: process.env.host!,
     user: process.env.user!,
   },
 } satisfies Config;

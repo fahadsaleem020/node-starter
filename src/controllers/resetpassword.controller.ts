@@ -3,6 +3,7 @@ import { users, verification } from "@/schema/schema";
 import { getHttpStatusCode } from "@/utils/auth";
 import { generateJwt } from "@/utils/common";
 import { Request, Response } from "express";
+import { log } from "@/utils/logger";
 
 export default async (req: Request, res: Response) => {
   try {
@@ -15,10 +16,10 @@ export default async (req: Request, res: Response) => {
 
     if (!user)
       return res.json({
-        message: "reset instructions sent provided email, if exists.",
+        message: "reset instructions sent to the provided email, If it exists.",
       });
 
-    // put any additional fields into token to safely extract on code password confirmation
+    // !put any additional fields into token to safely extract on code password confirmation
     const token = generateJwt({ email });
 
     const [isVerification] = await db
@@ -44,7 +45,7 @@ export default async (req: Request, res: Response) => {
 
     throw new Error("something went wrong.");
   } catch (error) {
-    console.log(error);
+    log.error(error);
     res.status(getHttpStatusCode("BAD_REQUEST")).send(error);
   }
 };

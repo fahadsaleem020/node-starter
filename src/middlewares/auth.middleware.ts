@@ -9,9 +9,7 @@ export const isAuthenticated = (
   if (req.isAuthenticated()) {
     return next();
   }
-  return res
-    .status(getHttpStatusCode("UNAUTHORIZED"))
-    .send("authentication required");
+  return res.status(getHttpStatusCode("UNAUTHORIZED")).send("unAuthorized");
 };
 
 export const isUnAuthenticated = (
@@ -20,5 +18,5 @@ export const isUnAuthenticated = (
   next: NextFunction
 ) => {
   if (req.isUnauthenticated()) return next();
-  return res.status(getHttpStatusCode("NOT_FOUND")).send("Not Found");
+  return res.status(getHttpStatusCode("NOT_FOUND")).send("not found");
 };

@@ -1,5 +1,5 @@
-import { users, verification } from "@/schema/schema";
 import { database } from "@/configs/connection.config";
+import { users, verification } from "@/schema/schema";
 import { isCuid } from "@paralleldrive/cuid2";
 import { verifyJwt } from "@/utils/common";
 import { eq } from "drizzle-orm";

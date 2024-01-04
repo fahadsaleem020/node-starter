@@ -1,3 +1,4 @@
+import { log } from "./logger";
 import axios from "axios";
 
 export const toCents = (amount: number) => amount * 100;
@@ -42,7 +43,7 @@ export const getExchangeRate = async (
     }
     throw new Error("exchange rate result unsuccessful");
   } catch (error) {
-    console.log(error);
+    log.error(error);
     return null;
   }
 };

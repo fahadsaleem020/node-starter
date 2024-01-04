@@ -1,15 +1,15 @@
-import confirmPasswordController from "@/controllers/confirmpassword.controller";
-import resetPasswordController from "@/controllers/resetpassword.controller";
-import { logoutController } from "@/controllers/logout.controller";
-import SignupController from "@/controllers/signup.controller";
-import { userController } from "@/controllers/user.controller";
-import verifyController from "@/controllers/verify.controller";
-import { Router } from "express";
-import passport from "passport";
 import {
   isAuthenticated,
   isUnAuthenticated,
 } from "@/middlewares/auth.middleware";
+import confirmPasswordController from "@/controllers/confirmpassword.controller";
+import resetPasswordController from "@/controllers/resetpassword.controller";
+import logoutController from "@/controllers/logout.controller";
+import signupController from "@/controllers/signup.controller";
+import verifyController from "@/controllers/verify.controller";
+import userController from "@/controllers/user.controller";
+import { Router } from "express";
+import passport from "passport";
 
 const routes = Router();
 
@@ -45,7 +45,7 @@ routes.post(
   "/signin",
   isUnAuthenticated,
   passport.authenticate("local"),
-  (_req, res) => {
+  (_, res) => {
     res.send("logged in");
   }
 );
@@ -91,7 +91,7 @@ routes.post(
  *         description: Internal server error.
  */
 
-routes.post("/signup", isUnAuthenticated, SignupController);
+routes.post("/signup", isUnAuthenticated, signupController);
 
 /**
  * @swagger

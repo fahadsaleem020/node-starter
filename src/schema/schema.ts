@@ -126,7 +126,7 @@ export const verificationrelations = relations(verification, ({ one }) => ({
   }),
 }));
 
-export const session = mysqlTable("sessions", {
+export const sessions = mysqlTable("sessions", {
   sessionId: varchar("session_id", { length: 128 }).primaryKey().notNull(),
   expires: int("expires").notNull(),
   data: mediumtext("data"),

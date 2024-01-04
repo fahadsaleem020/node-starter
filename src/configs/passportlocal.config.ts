@@ -1,6 +1,7 @@
 import { Strategy, VerifyFunctionWithRequest } from "passport-local";
 import { database } from "@/configs/connection.config";
 import { users } from "@/schema/schema";
+import { log } from "@/utils/logger";
 import { compare } from "bcrypt";
 import passport from "passport";
 
@@ -18,14 +19,12 @@ const verify: VerifyFunctionWithRequest = async (
 
     if (!user) return done(null, false);
 
-    // the condition below is used for verification after signup
-    if (user?.password === password) return done(null, user);
-
     const isPasswordMatched = await compare(password, user.password);
     if (!isPasswordMatched) return done(null, false);
+
     return done(null, user);
   } catch (error) {
-    console.log(error);
+    log.error(error);
     return done(error);
   }
 };

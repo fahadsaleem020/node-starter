@@ -1,8 +1,8 @@
 import { populateRequestObjectWithSocketIO } from "@/middlewares/socket.middleware";
 import { initializePassportLocal } from "@/configs/passportlocal.config";
+import { prepareMigration } from "./utils/preparemigration";
 import session, { SessionOptions } from "express-session";
 import { registerEvents } from "@/utils/registerEvents";
-import migrationRoute from "@/routes/migrate.routes";
 import unknownRoutes from "@/routes/unknown.routes";
 import { swagger } from "@/configs/swagger.config";
 import MySQLStore from "express-mysql-session";
@@ -19,11 +19,13 @@ import morgan from "morgan";
 
 config();
 const app = express();
-const port = process.env.PORT || 3000;
 const httpServer = createServer(app);
+const port = process.env.PORT || 3000;
+const isProducttion = app.get("env") === "production";
 
 swagger(app);
 initializePassportLocal();
+prepareMigration(isProducttion);
 
 const io = new Server(httpServer, {
   cors: {
@@ -34,11 +36,11 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", registerEvents);
-app.use("/api", migrationRoute);
 
 const Mysql = MySQLStore(session as any);
 const store = new Mysql({
   checkExpirationInterval: 10 * 60 * 1000,
+  port: Number(process.env.dbport!),
   password: process.env.password!,
   database: process.env.database!,
   createDatabaseTable: false,
@@ -52,28 +54,28 @@ const sessionOptions: SessionOptions = {
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
-  resave: false,
   saveUninitialized: false,
+  resave: false,
   store: store,
 };
-
-if (app.get("env") === "production") {
-  app.set("trust proxy", 1);
-  sessionOptions.cookie!.secure = true;
-  sessionOptions.cookie!.sameSite = "lax";
-  sessionOptions.cookie!.domain = process.env.CLIENT_DOMAIN!;
-  sessionOptions.cookie!.httpOnly = true;
-}
-
 const sessionMiddleware = session(sessionOptions);
-
 const corsOptions: CorsOptions = {
   credentials: true,
   origin: process.env.CLIENT_DOMAIN!,
 };
 
-io.engine.use(sessionMiddleware);
+if (isProducttion) {
+  app.set("trust proxy", 1);
+  sessionOptions.cookie!.secure = true;
+  sessionOptions.cookie!.httpOnly = true;
+  sessionOptions.cookie!.sameSite = "lax";
+  sessionOptions.cookie!.domain = process.env.CLIENT_DOMAIN!;
+}
+
 app.options("*", cors(corsOptions));
+app.use(express.static("public"));
+io.engine.use(sessionMiddleware);
+app.use(express.static("dist"));
 app.use(sessionMiddleware);
 app.use(passport.session());
 app.use(cors(corsOptions));
@@ -89,6 +91,14 @@ app.use((req, res, next) =>
 );
 app.use(morgan("dev"));
 app.use("/api", authRoutes);
+app.get("/test/:id", (req, res) => {
+  const params = req.params.id;
+  res.end(params);
+  
+});
+app.get("/redirect", (req, res) => {
+  res.end("end redirect");
+});
 app.use(unknownRoutes);
 
 httpServer.listen(port as number, () => {
