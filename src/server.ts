@@ -69,7 +69,7 @@ if (isProducttion) {
   sessionOptions.cookie!.secure = true;
   sessionOptions.cookie!.httpOnly = true;
   sessionOptions.cookie!.sameSite = "lax";
-  sessionOptions.cookie!.domain = process.env.CLIENT_DOMAIN!;
+  sessionOptions.cookie!.domain = process.env.SERVER_DOMAIN!;
 }
 
 app.options("*", cors(corsOptions));
@@ -94,7 +94,6 @@ app.use("/api", authRoutes);
 app.get("/test/:id", (req, res) => {
   const params = req.params.id;
   res.end(params);
-  
 });
 app.get("/redirect", (req, res) => {
   res.end("end redirect");
