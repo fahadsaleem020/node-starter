@@ -1,4 +1,4 @@
-import { sign, verify, SignOptions, JwtPayload } from "jsonwebtoken";
+import { sign, verify, SignOptions } from "jsonwebtoken";
 
 export const generateJwt = (
   payload: any,
@@ -10,5 +10,5 @@ export const generateJwt = (
 };
 
 export const verifyJwt = <T = {}>(token: string) => {
-  return verify(token, process.env.JWT_SECRET!) as T & JwtPayload;
+  return verify(token, process.env.JWT_SECRET!) as T;
 };

@@ -4,7 +4,9 @@ import { isCuid } from "@paralleldrive/cuid2";
 import { verifyJwt } from "@/utils/common";
 import { eq } from "drizzle-orm";
 
-export const verifyCode = async (code: string) => {
+export const verifyCode = async <ReturnType = typeof users.$inferSelect>(
+  code: string
+) => {
   const isCodeValid = isCuid(code);
 
   if (!isCodeValid) throw new Error("invalid code");
@@ -14,10 +16,10 @@ export const verifyCode = async (code: string) => {
     where: (t, { eq }) => eq(t.id, code),
   });
 
-  if (!verificationTable) throw new Error("session expired");
+  if (!verificationTable) throw new Error("code expired");
 
   await db.delete(verification).where(eq(verification.id, code));
-  return verifyJwt<typeof users.$inferSelect>(verificationTable.token);
+  return verifyJwt<ReturnType>(verificationTable.token);
 };
 
 export const getHttpStatusCode = (

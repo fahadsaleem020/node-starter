@@ -1,51 +1,47 @@
+import { getHttpStatusCode, verifyCode } from "@/utils/auth";
+import { NextFunction, Request, Response } from "express";
 import { database } from "@/configs/connection.config";
-import { users, verification } from "@/schema/schema";
-import { getHttpStatusCode } from "@/utils/auth";
-import { generateJwt } from "@/utils/common";
-import { Request, Response } from "express";
+import { users } from "@/schema/schema";
 import { log } from "@/utils/logger";
+import { eq } from "drizzle-orm";
+import passport from "passport";
+import { hash } from "bcrypt";
 
-export default async (req: Request, res: Response) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.body as typeof users.$inferSelect;
+    const { code, password, confirmPassword, authenticate } = req.body as {
+      confirmPassword: string;
+      authenticate: string;
+      password: string;
+      code: string;
+    };
 
+    if (!(password === confirmPassword))
+      return res
+        .status(getHttpStatusCode("FORBIDDEN"))
+        .send("Password doesn't match.");
+
+    const { email } = await verifyCode(code);
+    const hashedPassword = await hash(password, 10);
     const db = await database();
-    const user = await db.query.users.findFirst({
-      where: (t, { eq }) => eq(t.email, email),
-    });
-
-    if (!user)
-      return res.json({
-        message: "reset instructions sent to the provided email, If it exists.",
-      });
-
-    // !put any additional fields into token to safely extract on code password confirmation
-    const token = generateJwt({ email });
-
-    const [isVerification] = await db
-      .insert(verification)
-      .values({
-        email,
-        token,
+    const [isPasswordUpdate] = await db
+      .update(users)
+      .set({
+        password: hashedPassword,
       })
-      .onDuplicateKeyUpdate({
-        set: {
-          token,
-        },
-      });
+      .where(eq(users.email, email));
 
-    if (isVerification.affectedRows) {
-      const verificationTable = await db.query.verification.findFirst({
-        where: (t, { eq }) => eq(t.email, email),
-      });
-
-      // send via email (sendgrid).
-      if (verificationTable) return res.json({ code: verificationTable.id });
+    if (isPasswordUpdate.affectedRows && authenticate) {
+      req.body = { email, password };
+      passport.authenticate("local")(req, res, next);
+    } else if (isPasswordUpdate.affectedRows && !authenticate) {
+      next();
+    } else {
+      throw new Error("Failed to reset password");
     }
-
-    throw new Error("something went wrong.");
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error;
     log.error(error);
-    res.status(getHttpStatusCode("BAD_REQUEST")).send(error);
+    res.status(getHttpStatusCode("INTERNAL_SERVER_ERROR")).send(error.message);
   }
 };

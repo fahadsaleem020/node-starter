@@ -1,10 +1,5 @@
-include zod verification
-setup mailer to have dynamic transport protocol
-replace the polbora backend to this new modified version
-add connectionString/uri to dizzle.config.ts and connection.config.ts
-and in server.ts file
+install device-detector-js
+install formidable
+install drizzle-zod export create schemas
 
-make the docs authenticable
-
-to fetch session based on userid and read from "data" column
-`%"passport":{"user":"${user.id}"%`
+publish the latest changes

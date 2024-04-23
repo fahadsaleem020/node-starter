@@ -16,6 +16,8 @@ const options: Options = {
     },
     basePath: "localhost:3000/",
     host: "localhost",
+    consumes: ["application/json"],
+    produces: ["application/json"],
     tags: [{ name: "Authentication" }],
   },
 

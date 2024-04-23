@@ -1,3 +1,4 @@
+import { createInsertSchema } from "drizzle-zod";
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 import {
@@ -44,7 +45,6 @@ export const users = mysqlTable("users", {
 });
 
 export const usersrelations = relations(users, ({ many, one }) => ({
-  notifications: many(notifications),
   addresses: many(address),
   contacts: many(contact),
   profileInfo: one(profileInfo, {
@@ -61,27 +61,8 @@ export const profileInfo = mysqlTable("profile_info", {
     .unique(),
 });
 
-export const notifications = mysqlTable("notifications", {
-  id: uuid("id").primaryKey(),
-  content: text("content").notNull(),
-  timestamp: timestamp("timestamp").defaultNow(),
-  status: mysqlEnum("status", ["read", "undread"]).notNull(),
-  userId: foreignkeyRef("user_id", users.id, { onDelete: "cascade" }).notNull(),
-});
-
-export const notificationsrelations = relations(notifications, ({ one }) => ({
-  user: one(users, {
-    fields: [notifications.userId],
-    references: [users.id],
-  }),
-}));
-
 export const address = mysqlTable("address", {
   id: uuid("id").primaryKey(),
-  street: varchar("street", { length: 256 }).notNull(),
-  city: varchar("city", { length: 150 }).notNull(),
-  state: varchar("state", { length: 100 }).notNull(),
-  postalCode: varchar("postal_code", { length: 50 }).notNull(),
   country: varchar("country", { length: 100 }).notNull(),
   userId: foreignkeyRef("user_id", users.id, { onDelete: "cascade" }).notNull(),
 });
@@ -132,3 +113,5 @@ export const sessions = mysqlTable("sessions", {
   data: mediumtext("data"),
   ...timeStamps,
 });
+
+export const userInsertSchema = createInsertSchema(users);

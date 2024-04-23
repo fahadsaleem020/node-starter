@@ -3,6 +3,7 @@ import { initializePassportLocal } from "@/configs/passportlocal.config";
 import { prepareMigration } from "./utils/preparemigration";
 import session, { SessionOptions } from "express-session";
 import { registerEvents } from "@/utils/registerEvents";
+import { dbConfig } from "./configs/connection.config";
 import unknownRoutes from "@/routes/unknown.routes";
 import { swagger } from "@/configs/swagger.config";
 import MySQLStore from "express-mysql-session";
@@ -40,13 +41,9 @@ io.on("connection", registerEvents);
 const Mysql = MySQLStore(session as any);
 const store = new Mysql({
   checkExpirationInterval: 10 * 60 * 1000,
-  port: Number(process.env.dbport!),
-  password: process.env.password!,
-  database: process.env.database!,
   createDatabaseTable: false,
-  host: process.env.host!,
-  user: process.env.user!,
   clearExpired: true,
+  ...dbConfig,
 });
 
 const sessionOptions: SessionOptions = {
@@ -67,11 +64,10 @@ const corsOptions: CorsOptions = {
 if (isProducttion) {
   app.set("trust proxy", 1);
   sessionOptions.cookie!.secure = true;
-  sessionOptions.cookie!.httpOnly = true;
-  sessionOptions.cookie!.sameSite = "lax";
-  sessionOptions.cookie!.domain = process.env.CLIENT_DOMAIN;
+  sessionOptions.cookie!.sameSite = "none";
 }
 
+app.use(express.urlencoded({ extended: false }));
 app.options("*", cors(corsOptions));
 app.use(express.static("public"));
 io.engine.use(sessionMiddleware);
@@ -91,13 +87,6 @@ app.use((req, res, next) =>
 );
 app.use(morgan("dev"));
 app.use("/api", authRoutes);
-app.get("/test/:id", (req, res) => {
-  const params = req.params.id;
-  res.end(params);
-});
-app.get("/redirect", (req, res) => {
-  res.end("end redirect");
-});
 app.use(unknownRoutes);
 
 httpServer.listen(port as number, () => {

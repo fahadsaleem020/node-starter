@@ -14,13 +14,15 @@ export const database = async (logger = false) => {
   return db;
 };
 
-export const client = mysql.createPool({
-  port: Number(process.env.dbport!),
-  password: process.env.password!,
+export const dbConfig = {
+  port: Number(process.env.dbport),
+  password: process.env.password,
   database: process.env.database!,
   host: process.env.host!,
-  user: process.env.user!,
-});
+  user: process.env.user,
+};
+
+export const client = mysql.createPool(dbConfig);
 
 export const migrateSchema = async (
   db: MySql2Database<Record<string, unknown>>

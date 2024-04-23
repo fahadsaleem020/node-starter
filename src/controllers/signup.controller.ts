@@ -1,5 +1,5 @@
+import { userInsertSchema, users, verification } from "@/schema/schema";
 import { database } from "@/configs/connection.config";
-import { users, verification } from "@/schema/schema";
 import { getHttpStatusCode } from "@/utils/auth";
 import { generateJwt } from "@/utils/common";
 import { Request, Response } from "express";
@@ -8,13 +8,17 @@ import { hash } from "bcrypt";
 
 export default async (req: Request, res: Response) => {
   try {
-    // ! MUST VALIDATE BEFORE INSERTION
-    const user = {
-      email: req.body.email as string,
+    const user: typeof users.$inferInsert = {
       password: await hash(req.body.password, 10),
-      fullName: req.body.fullName as string,
-      profilePic: req.body.profilePic as string,
-    } as typeof users.$inferSelect;
+      fullName: req.body.fullName,
+      email: req.body.email,
+    };
+
+    const { success: areFieldsValid } = await userInsertSchema.safeParseAsync(
+      user
+    );
+
+    if (!areFieldsValid) throw new Error("Validation Error");
 
     const db = await database();
     const isUserExists = await db.query.users.findFirst({
@@ -24,7 +28,7 @@ export default async (req: Request, res: Response) => {
     if (isUserExists)
       return res
         .status(getHttpStatusCode("FORBIDDEN"))
-        .end("email already exists(ambigious message)");
+        .end("email already exists");
 
     const token = generateJwt(user);
 
@@ -53,8 +57,9 @@ export default async (req: Request, res: Response) => {
     }
     //Exception on verification upsert failure.
     throw new Error("something went wrong.");
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error;
     log.error(error);
-    res.status(getHttpStatusCode("INTERNAL_SERVER_ERROR")).send(error);
+    res.status(getHttpStatusCode("INTERNAL_SERVER_ERROR")).send(error.message);
   }
 };
