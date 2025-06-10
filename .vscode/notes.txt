@@ -1,5 +1,3 @@
-install device-detector-js
-install formidable
-install drizzle-zod export create schemas
-
-publish the latest changes
+remove auth.middleware.ts
+remove store.config.ts( used by session.config.ts which is used by io.engine in server )
+remove auth.ts util

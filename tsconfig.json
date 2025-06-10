@@ -8,8 +8,10 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
     "removeComments": true,
+    "noUnusedLocals": true,
     "esModuleInterop": true,
-    "noUncheckedIndexedAccess": true,
+    "noUnusedParameters": true,
+    "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": ["*"]

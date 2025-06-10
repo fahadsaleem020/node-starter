@@ -1,29 +1,25 @@
-import { MySql2Database, drizzle } from "drizzle-orm/mysql2";
-import { migrate } from "drizzle-orm/mysql2/migrator";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import mysql, { type PoolOptions } from "mysql2";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
 import * as schema from "@/schema/schema";
-import mysql from "mysql2/promise";
-import { config } from "dotenv";
-config();
+import { env } from "@/utils/env.utils";
 
-export const database = async (logger = false) => {
-  const db = drizzle(client, {
-    mode: "default",
+export const database = async (logger = false) =>
+  drizzle({
+    casing: "snake_case",
+    client: neon(env.CONNECTION_URL),
     logger,
     schema,
   });
-  return db;
+
+export const dbConfig: PoolOptions = {
+  uri: env.CONNECTION_URL,
 };
 
-export const dbConfig = {
-  port: Number(process.env.dbport),
-  password: process.env.password,
-  database: process.env.database!,
-  host: process.env.host!,
-  user: process.env.user,
-};
-
-export const client = mysql.createPool(dbConfig);
+export const connection = mysql.createPool(dbConfig);
 
 export const migrateSchema = async (
-  db: MySql2Database<Record<string, unknown>>
+  db: PostgresJsDatabase<Record<string, unknown>>
 ) => await migrate(db, { migrationsFolder: "drizzle" });

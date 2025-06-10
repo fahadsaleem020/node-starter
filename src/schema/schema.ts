@@ -1,70 +1,67 @@
-import { createInsertSchema } from "drizzle-zod";
-import { createId } from "@paralleldrive/cuid2";
-import { relations } from "drizzle-orm";
 import {
-  ReferenceConfig,
-  MySqlColumn,
-  mediumtext,
-  mysqlTable,
-  timestamp,
-  mysqlEnum,
+  text,
+  json,
+  pgTable,
   varchar,
   boolean,
-  json,
-  text,
-  int,
-} from "drizzle-orm/mysql-core";
+  integer,
+  timestamp,
+  ReferenceConfig,
+} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { createId } from "@paralleldrive/cuid2";
+import { createInsertSchema } from "drizzle-zod";
 
 const timeStamps = {
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().$onUpdateFn(() => new Date()),
 };
 
-const uuid = (columnName: string) =>
-  varchar(columnName, { length: 128 }).$defaultFn(() => createId());
+type UUIDOptions = Exclude<Parameters<typeof varchar>[1], undefined>;
+
+const uuid = (columnName?: string, options?: UUIDOptions) =>
+  varchar(columnName ?? "id", options).$defaultFn(() => createId());
 
 const foreignkeyRef = (
   columnName: string,
-  refColumn: MySqlColumn,
+  refColumn: ReferenceConfig["ref"],
   actions?: ReferenceConfig["actions"]
-) => {
-  return varchar(columnName, { length: 128 }).references(
-    () => refColumn,
-    actions
-  );
-};
+) => varchar(columnName, { length: 128 }).references(refColumn, actions);
 
-export const users = mysqlTable("users", {
-  id: uuid("id").primaryKey(),
-  fullName: varchar("full_name", { length: 100 }),
-  email: varchar("email", { length: 100 }).notNull().unique(),
-  profilePic: varchar("profile_pic_url", { length: 256 }),
-  password: varchar("password", { length: 100 }).notNull(),
-  userRoles: mysqlEnum("user_roles", ["user", "admin"]).default("user"),
+export const users = pgTable("users", {
+  id: uuid().primaryKey(),
+  firstName: varchar({ length: 100 }),
+  lastName: varchar({ length: 100 }),
+  profilePic: varchar({ length: 256 }),
+  password: varchar({ length: 100 }).notNull(),
+  email: varchar({ length: 100 }).notNull().unique(),
+  userRoles: varchar(["user", "admin"]).default("user"),
   ...timeStamps,
 });
 
 export const usersrelations = relations(users, ({ many, one }) => ({
-  addresses: many(address),
   contacts: many(contact),
+  addresses: many(address),
   profileInfo: one(profileInfo, {
     fields: [users.id],
     references: [profileInfo.userId],
   }),
 }));
 
-export const profileInfo = mysqlTable("profile_info", {
+export const profileInfo = pgTable("profile_info", {
   id: uuid("id").primaryKey(),
   metaData: json("meta_data"),
-  userId: foreignkeyRef("user_id", users.id, { onDelete: "cascade" })
+  userId: foreignkeyRef("user_id", () => users.id, { onDelete: "cascade" })
     .notNull()
     .unique(),
 });
 
-export const address = mysqlTable("address", {
+export const address = pgTable("address", {
   id: uuid("id").primaryKey(),
   country: varchar("country", { length: 100 }).notNull(),
-  userId: foreignkeyRef("user_id", users.id, { onDelete: "cascade" }).notNull(),
+  userId: foreignkeyRef("user_id", () => users.id, {
+    onDelete: "cascade",
+  }).notNull(),
 });
 
 export const addressrelations = relations(address, ({ one }) => ({
@@ -74,7 +71,7 @@ export const addressrelations = relations(address, ({ one }) => ({
   }),
 }));
 
-export const contact = mysqlTable("contact", {
+export const contact = pgTable("contact", {
   id: uuid("id").primaryKey(),
   emails: json("emails").notNull().$type<
     {
@@ -84,7 +81,9 @@ export const contact = mysqlTable("contact", {
   >(),
   number: varchar("number", { length: 50 }).notNull().unique(),
   verified: boolean("verified").notNull(),
-  userId: foreignkeyRef("user_id", users.id, { onDelete: "cascade" }).notNull(),
+  userId: foreignkeyRef("user_id", () => users.id, {
+    onDelete: "cascade",
+  }).notNull(),
 });
 
 export const contactrelations = relations(contact, ({ one }) => ({
@@ -94,7 +93,18 @@ export const contactrelations = relations(contact, ({ one }) => ({
   }),
 }));
 
-export const verification = mysqlTable("verification", {
+export const throttleinsight = pgTable("throttle_insight", {
+  waitTime: integer("wait_time").notNull(),
+  msBeforeNext: integer("ms_before_next").notNull(),
+  endPoint: varchar("end_point", { length: 225 }),
+  pointsAllotted: integer("allotted_points").notNull(),
+  consumedPoints: integer("consumed_points").notNull(),
+  remainingPoints: integer("remaining_points").notNull(),
+  key: varchar("key", { length: 225 }).primaryKey().notNull(),
+  isFirstInDuration: boolean("is_first_in_duration").notNull(),
+});
+
+export const verification = pgTable("verification", {
   id: uuid("id").primaryKey(),
   token: text("token").notNull(),
   email: varchar("email", { length: 100 }).notNull().unique(),
@@ -107,10 +117,10 @@ export const verificationrelations = relations(verification, ({ one }) => ({
   }),
 }));
 
-export const sessions = mysqlTable("sessions", {
+export const sessions = pgTable("sessions", {
   sessionId: varchar("session_id", { length: 128 }).primaryKey().notNull(),
-  expires: int("expires").notNull(),
-  data: mediumtext("data"),
+  expires: integer("expires").notNull(),
+  data: text("data"),
   ...timeStamps,
 });
 

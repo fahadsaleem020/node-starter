@@ -1,4 +1,4 @@
-import { log } from "./logger";
+import { log } from "./logger.util";
 import axios from "axios";
 
 export const toCents = (amount: number) => amount * 100;

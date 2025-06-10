@@ -1,5 +1,5 @@
 import { database, migrateSchema } from "@/configs/connection.config";
-import { log } from "./logger";
+import { log } from "./logger.util";
 
 /**
  * @param enableMigration

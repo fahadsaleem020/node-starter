@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
-import { getHttpStatusCode } from "@/utils/auth";
 import DeviceDetector from "device-detector-js";
 import { Request } from "express";
+import status from "http-status";
 
 export const isAuthenticated = (
   req: Request,
@@ -11,7 +11,7 @@ export const isAuthenticated = (
   if (req.isAuthenticated()) {
     return next();
   }
-  return res.status(getHttpStatusCode("UNAUTHORIZED")).send("unAuthorized");
+  return res.status(status.UNAUTHORIZED).send("unAuthorized");
 };
 
 export const isUnAuthenticated = (
@@ -20,7 +20,7 @@ export const isUnAuthenticated = (
   next: NextFunction
 ) => {
   if (req.isUnauthenticated()) return next();
-  return res.status(getHttpStatusCode("NOT_FOUND")).send("not found");
+  return res.status(status.NOT_FOUND).send("not found");
 };
 
 export const insertDevice = (req: Request, _: Response, next: NextFunction) => {

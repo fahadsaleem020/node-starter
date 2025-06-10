@@ -1,20 +1,19 @@
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Server, Socket } from "socket.io";
+import type { Request } from "express";
 
-declare module "express" {
-  export interface Request {
-    io?: IO;
-  }
-}
-
-export declare type SocketEventHandler<
+export type SocketEventHandler<
   Data = { [p in string]: any },
   WithSocketObject = { socket: Socket } & Data
 > = (params: WithSocketObject) => any;
 
-export declare type IO = Server<
+export type IO = Server<
   DefaultEventsMap,
   DefaultEventsMap,
   DefaultEventsMap,
   any
 >;
+
+export interface RequestWithIO extends Request {
+  io: IO;
+}
