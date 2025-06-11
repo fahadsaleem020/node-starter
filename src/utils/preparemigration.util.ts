@@ -1,5 +1,5 @@
 import { database, migrateSchema } from "@/configs/connection.config";
-import { log } from "./logger.util";
+import { logger } from "./logger.util";
 
 /**
  * @param enableMigration
@@ -11,10 +11,10 @@ export const prepareMigration = async (enableMigration = false) => {
   try {
     const db = await database();
     await migrateSchema(db);
-    log.info("migration successful.");
+    logger.info("migration successful.");
   } catch (e) {
     const error = e as Error;
-    log.error(`migration failure: ${error.message}`);
-    log.warn('make sure to run the command "npm run dbgenerate".');
+    logger.error(`migration failure: ${error.message}`);
+    logger.warn('make sure to run the command "npm run dbgenerate".');
   }
 };

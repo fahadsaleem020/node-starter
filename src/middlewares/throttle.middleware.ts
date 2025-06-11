@@ -1,93 +1,36 @@
-import { type IRateLimiterStoreNoAutoExpiryOptions } from "rate-limiter-flexible";
-import { RateLimiterMySQL, RateLimiterMemory } from "rate-limiter-flexible";
-import { connection, database } from "../configs/connection.config";
-import { throttleinsight } from "@/schema/schema";
+import { Ratelimit, type Duration } from "@upstash/ratelimit";
 import type { RequestHandler } from "express";
+import { Redis } from "@upstash/redis";
 import { status } from "http-status";
+import { config } from "dotenv";
+config();
 
-interface IOverRideOptions
-  extends Omit<IRateLimiterStoreNoAutoExpiryOptions, "storeClient"> {
-  errorMessage?: string;
-}
+const redis = Redis.fromEnv();
 
-const options: IRateLimiterStoreNoAutoExpiryOptions = {
-  dbName: process.env.database,
-  storeClient: connection,
-  tableName: "throttle",
-  blockDuration: 10,
-  keyPrefix: "",
-  duration: 1,
-  points: 20,
-};
-
-type Throttle = <O = IOverRideOptions | "default">(
-  overRideOptions: O
-) => RequestHandler;
-
-export const throttle: Throttle = (overRideOptions) => {
-  const limiter = new RateLimiterMySQL({
-    ...options,
-    ...(overRideOptions === "default"
-      ? {}
-      : {
-          ...overRideOptions,
-          insuranceLimiter: new RateLimiterMemory({
-            blockDuration: (overRideOptions as IOverRideOptions).blockDuration,
-            keyPrefix: (overRideOptions as IOverRideOptions).keyPrefix,
-            duration: (overRideOptions as IOverRideOptions).duration,
-            points: (overRideOptions as IOverRideOptions).points,
-          }),
-        }),
+export const throttle = (
+  points: number,
+  duration: Duration
+): RequestHandler => {
+  const ratelimit = new Ratelimit({
+    limiter: Ratelimit.slidingWindow(points, duration),
+    prefix: "",
+    redis,
   });
 
   return async (req, res, next) => {
     try {
-      await limiter.consume(req.ip!);
+      const { success } = await ratelimit.limit(req.ip!);
+      if (!success) {
+        return res
+          .status(status.TOO_MANY_REQUESTS)
+          .json({ message: "Too many requests" });
+      }
       next();
     } catch (error) {
-      const db = await database();
-      const afterConsumption = await limiter.get(req.ip!);
-
-      if (afterConsumption) {
-        const {
-          msBeforeNext,
-          consumedPoints,
-          remainingPoints,
-          isFirstInDuration,
-        } = afterConsumption;
-
-        const values = {
-          msBeforeNext,
-          consumedPoints,
-          remainingPoints,
-          isFirstInDuration,
-          endPoint: req.path,
-          waitTime: msBeforeNext / 1000,
-        };
-
-        await db
-          .insert(throttleinsight)
-          .values({
-            key: req.ip!,
-            pointsAllotted: limiter.duration,
-            ...values,
-          })
-          .onConflictDoUpdate({
-            target: throttleinsight.key,
-            set: values,
-          });
-      }
-
-      const customErrorMessage =
-        overRideOptions &&
-        typeof overRideOptions === "object" &&
-        "errorMessage" in overRideOptions
-          ? (overRideOptions?.errorMessage as string)
-          : undefined;
-
+      console.error("Rate limiter error:", error);
       res
-        .status(status.TOO_MANY_REQUESTS)
-        .json({ message: customErrorMessage ?? "Too many requests" });
+        .status(status.INTERNAL_SERVER_ERROR)
+        .json({ message: "Rate limiter failed" });
     }
   };
 };

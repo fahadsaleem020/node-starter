@@ -12,7 +12,7 @@ const options: Options = {
     info: {
       title: "NodeJS Starter",
       version: "1.0.0",
-      description: "NodeJS starter with session authentication.",
+      description: "NodeJS starter with Better-Auth.",
     },
     basePath: "localhost:3000/",
     host: "localhost",
@@ -27,7 +27,7 @@ const options: Options = {
 export const swaggerSpec = swaggerJSDOC(options);
 export const swagger = (app: Express) => {
   app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  app.get("/api/docs-json", (req, res) => {
+  app.get("/api/docs-json", (_, res) => {
     res.send(swaggerSpec);
   });
 };

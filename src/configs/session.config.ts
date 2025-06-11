@@ -1,5 +1,5 @@
 import { SessionOptions } from "express-session";
-import { store } from "./store.config";
+// import { store } from "./store.config";
 
 export const sessionOptions: SessionOptions = {
   cookie: {
@@ -8,5 +8,5 @@ export const sessionOptions: SessionOptions = {
   secret: process.env.COOKIE_SECRET!,
   saveUninitialized: false,
   resave: false,
-  store: store,
+  // store: store,
 };

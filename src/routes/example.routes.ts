@@ -1,7 +1,7 @@
 import { Request, Router } from "express";
 const routes = Router();
 
-routes.get("/", async (req: Request, res) => {
+routes.get("/", async (_: Request, res) => {
   res.end("This is an example route");
 });
 
