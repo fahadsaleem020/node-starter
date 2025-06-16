@@ -1,18 +1,17 @@
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "@/schema/schema";
 import { env } from "@/utils/env.utils";
+import { Pool } from "pg";
 
-export const database = async (logger = false) =>
-  drizzle({
-    client: neon(env.CONNECTION_URL),
-    casing: "snake_case",
-    logger,
-    schema,
-  });
+export const database = drizzle(env.CONNECTION_URL, {
+  casing: "snake_case",
+  schema,
+});
+
+export const connection = new Pool({ connectionString: env.CONNECTION_URL });
 
 export const migrateSchema = async (
-  db: PostgresJsDatabase<Record<string, unknown>>
+  db: NodePgDatabase<Record<string, unknown>>
 ) => await migrate(db, { migrationsFolder: "drizzle" });
