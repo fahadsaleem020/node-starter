@@ -9,7 +9,7 @@ export const assignSocketToReqIO = (io: IO) => {
   };
 };
 
-//! This needs to be changeg
+//! This needs to be changed
 export const authorizeUser = (socket: Socket, next: (error?: any) => void) => {
   const request = socket.request as unknown as Express.Request;
   const passport = (request.session as any)?.passport;

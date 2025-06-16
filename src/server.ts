@@ -1,7 +1,7 @@
 // import { prepareProductionStance } from "./configs/prepareproductionstance.config";
 import { assignSocketToReqIO } from "@/middlewares/socket.middleware";
-import { prepareMigration } from "./utils/preparemigration.util";
 // import { authorizeUser } from "@/middlewares/socket.middleware";
+import { prepareMigration } from "./utils/preparemigration.util";
 import { throttle } from "./middlewares/throttle.middleware";
 import { registerEvents } from "@/utils/registerevents.util";
 // import { sessionOptions } from "./configs/session.config";
