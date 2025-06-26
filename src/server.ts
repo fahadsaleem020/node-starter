@@ -51,7 +51,7 @@ app.use(cookieParser());
 // io.use(authorizeUser);
 
 app.use(morgan("dev"));
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(throttle("default"));
 app.use(express.json());
 app.use(unknownRoutes);

@@ -14,10 +14,12 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // 5 minuets
     },
   },
+  // signup/signin/reset-password
   emailAndPassword: {
     sendResetPassword: async () => {
       // Send reset password email
     },
+    requireEmailVerification: true,
     maxPasswordLength: 10,
     minPasswordLength: 8,
     autoSignIn: true,
@@ -32,10 +34,6 @@ export const auth = betterAuth({
   },
   user: {
     modelName: "users",
-    fields: {
-      image: "profilePic",
-      name: "fullName",
-    },
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async () => {
