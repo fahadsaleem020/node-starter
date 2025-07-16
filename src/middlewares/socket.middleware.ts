@@ -4,6 +4,9 @@ import { getSession } from "@/utils/getsession.util";
 import { logger } from "@/utils/logger.util";
 import { IO } from "@/types/socket.types";
 
+/**
+ * This runs on every request.
+ */
 export const assignSocketToReqIO = (io: IO) => {
   return (req: Request, _: Response, next: NextFunction) => {
     req.io = io;
@@ -11,6 +14,9 @@ export const assignSocketToReqIO = (io: IO) => {
   };
 };
 
+/**
+ * This runs once per socket connection.
+ */
 export const connAuthBridge = async (
   socket: Socket,
   next: (error?: ExtendedError) => void
