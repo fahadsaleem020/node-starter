@@ -209,35 +209,20 @@ Once the server is running, you can access the Swagger documentation at:
 ## Project Structure
 
 ```
-
 ├── src/
-
 │ ├── configs/ # Configuration files
-
 │ ├── controllers/ # Route controllers
-
 │ ├── events/ # Socket.IO event handlers
-
 │ ├── lib/ # Core libraries
-
 │ ├── middlewares/ # Express middlewares
-
 │ ├── routes/ # API routes
-
 │ ├── schema/ # Database schema
-
 │ ├── types/ # TypeScript type definitions
-
 │ ├── utils/ # Utility functions
-
 │ └── server.ts # Main application entry
-
 ├── public/ # Static files
-
 ├── drizzle.config.ts # Drizzle ORM configuration
-
 ├── tsconfig.json # TypeScript configuration
-
 └── package.json # Project dependencies
 
 ```
