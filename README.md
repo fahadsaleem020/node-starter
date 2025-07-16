@@ -26,7 +26,7 @@ A robust, feature-rich Express.js backend template built with TypeScript, design
 
 - **API Documentation**: Swagger UI for API documentation
 
-- **Real-time Communication**: Socket.IO integration for WebSocket support
+- **Real-time Communication**: Socket IO integration for WebSocket support
 
 - **Security Features**:
 
@@ -64,9 +64,15 @@ A robust, feature-rich Express.js backend template built with TypeScript, design
 
 ```bash
 
-git  clone https://github.com/fahadsaleem020/node-starter.git
+
+
+git  clone  https://github.com/fahadsaleem020/node-starter.git
+
+
 
 cd  node-started
+
+
 
 ```
 
@@ -74,11 +80,19 @@ cd  node-started
 
 ```bash
 
+
+
 npm  install
+
+
 
 # or
 
+
+
 yarn  install
+
+
 
 ```
 
@@ -88,33 +102,59 @@ Update the following variables in the `.env` file:
 
 ```
 
+
+
 CONNECTION_URL=your_postgres_connection_string
+
+
 
 COOKIE_SECRET=your_random_secret
 
+
+
 JWT_SECRET=your_random_secret
 
+
+
 FRONTEND_DOMAIN=http://localhost:4000
+
+
 
 BACKEND_DOMAIN=http://localhost:3000
 
 
 
+
+
 # For Cloudinary (optional)
+
+
 
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 
+
+
 CLOUDINARY_API_KEY=your_api_key
+
+
 
 CLOUDINARY_API_SECRET=your_api_secret
 
 
 
+
+
 # For Brevo Email (optional)
+
+
 
 BREVO_API_KEY=your_brevo_api_key
 
+
+
 BREVO_SENDER=your_sender_email
+
+
 
 
 
@@ -125,7 +165,11 @@ BREVO_SENDER=your_sender_email
 
 ```bash
 
+
+
 npm  run  dbgenerate
+
+
 
 ```
 
@@ -133,7 +177,11 @@ npm  run  dbgenerate
 
 ```bash
 
+
+
 npm  run  dbpush
+
+
 
 ```
 
@@ -143,7 +191,11 @@ npm  run  dbpush
 
 ```bash
 
+
+
 npm  run  dev
+
+
 
 ```
 
@@ -153,9 +205,15 @@ This will start the server with hot-reloading using ts-node-dev.
 
 ```bash
 
+
+
 npm  run  build
 
+
+
 npm  start
+
+
 
 ```
 
@@ -183,35 +241,67 @@ Once the server is running, you can access the Swagger documentation at:
 
 ```
 
+
+
 ├── src/
+
+
 
 │ ├── configs/ # Configuration files
 
+
+
 │ ├── controllers/ # Route controllers
+
+
 
 │ ├── events/ # Socket.IO event handlers
 
+
+
 │ ├── lib/ # Core libraries
+
+
 
 │ ├── middlewares/ # Express middlewares
 
+
+
 │ ├── routes/ # API routes
+
+
 
 │ ├── schema/ # Database schema
 
+
+
 │ ├── types/ # TypeScript type definitions
+
+
 
 │ ├── utils/ # Utility functions
 
+
+
 │ └── server.ts # Main application entry
+
+
 
 ├── public/ # Static files
 
+
+
 ├── drizzle.config.ts # Drizzle ORM configuration
+
+
 
 ├── tsconfig.json # TypeScript configuration
 
+
+
 └── package.json # Project dependencies
+
+
 
 ```
 
@@ -231,31 +321,43 @@ Once the server is running, you can access the Swagger documentation at:
 
 - Users automatically join rooms with their user ID for easy direct messaging
 
+## Frontend Integration (React.js)
+
+For managing user authentication in React.js applications, use these utility components:
+
+- **User Provider**: [Context provider for user authentication state management](https://gist.github.com/fahadsaleem020/0eaab657973741d4b62e8c21799d2863)
+
+- **Online Component**: [Renders content when user is authenticated](https://gist.github.com/fahadsaleem020/764a09756105f4553a24a9c65ff68f4c)
+
+- **Offline Component**: [Renders content when user is not authenticated](https://gist.github.com/fahadsaleem020/021f974e153c7415adffc4d01d943d42)
+
+These components provide a seamless way to handle authentication states in your React frontend.
+
 ## Key Technologies
 
-- **Express.js**: Web framework
+- **TypeScript**: Type-safe JavaScript development
 
-- **TypeScript**: Programming language
+- **Express.js**: Fast, unopinionated web framework
 
-- **PostgreSQL**: Database
+- **Better-Auth**: Modern authentication library with session management
 
-- **Drizzle ORM**: Database ORM
+- **Drizzle ORM**: Type-safe SQL toolkit and ORM
 
-- **Better-Auth**: Authentication library
+- **PostgreSQL**: Robust relational database
 
-- **Socket IO**: WebSocket library
+- **Socket IO**: Real-time bidirectional event-based communication
 
-- **Swagger**: API documentation
+- **Swagger UI**: Interactive API documentation
 
-- **Pino**: Logging
+- **Pino**: Fast JSON logger
 
-- **Helmet**: Security headers
+- **Zod**: TypeScript-first schema validation
 
-- **Cloudinary**: File storage
+- **Cloudinary**: Cloud-based image and video management
 
-- **Brevo**: Email service
+- **Brevo**: Email service integration
 
-- **Tailwind CSS**: Utility-first CSS framework
+- **Rate Limiting**: PostgreSQL-based request throttling
 
 ## License
 
