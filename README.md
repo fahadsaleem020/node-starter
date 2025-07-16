@@ -58,41 +58,29 @@ A robust, feature-rich Express.js backend template built with TypeScript, design
 
 - npm or yarn
 
+-
+
 ### Installation
 
 1. Clone the repository
 
 ```bash
 
-
-
 git  clone  https://github.com/fahadsaleem020/node-starter.git
-
-
 
 cd  node-started
 
-
-
 ```
 
-2. Install dependencies
+3. Install dependencies
 
 ```bash
 
-
-
 npm  install
-
-
 
 # or
 
-
-
 yarn  install
-
-
 
 ```
 
@@ -102,62 +90,61 @@ Update the following variables in the `.env` file:
 
 ```
 
+# Required
 
+BETTER_AUTH_SECRET = GENERATE_RANDOM_SECRET
+
+BETTER_AUTH_URL = http://localhost:3000
 
 CONNECTION_URL=your_postgres_connection_string
 
 
 
+# Required
+
 COOKIE_SECRET=your_random_secret
-
-
 
 JWT_SECRET=your_random_secret
 
 
 
+# Required
+
+DATABASE_NAME = DATABASE_NAME
+
+
+
+# Required
+
 FRONTEND_DOMAIN=http://localhost:4000
-
-
 
 BACKEND_DOMAIN=http://localhost:3000
 
 
 
-
-
 # For Cloudinary (optional)
-
-
 
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 
-
-
 CLOUDINARY_API_KEY=your_api_key
-
-
 
 CLOUDINARY_API_SECRET=your_api_secret
 
 
 
-
-
 # For Brevo Email (optional)
 
-
-
 BREVO_API_KEY=your_brevo_api_key
-
-
 
 BREVO_SENDER=your_sender_email
 
 
 
+# For Google Authentication (optional)
 
+GOOGLE_CLIENT_ID = ID
 
+GOOGLE_CLIENT_SECRET = SECRET
 
 ```
 
@@ -165,11 +152,7 @@ BREVO_SENDER=your_sender_email
 
 ```bash
 
-
-
 npm  run  dbgenerate
-
-
 
 ```
 
@@ -177,11 +160,7 @@ npm  run  dbgenerate
 
 ```bash
 
-
-
 npm  run  dbpush
-
-
 
 ```
 
@@ -191,11 +170,7 @@ npm  run  dbpush
 
 ```bash
 
-
-
 npm  run  dev
-
-
 
 ```
 
@@ -205,15 +180,9 @@ This will start the server with hot-reloading using ts-node-dev.
 
 ```bash
 
-
-
 npm  run  build
 
-
-
 npm  start
-
-
 
 ```
 
@@ -241,67 +210,35 @@ Once the server is running, you can access the Swagger documentation at:
 
 ```
 
-
-
 ├── src/
-
-
 
 │ ├── configs/ # Configuration files
 
-
-
 │ ├── controllers/ # Route controllers
-
-
 
 │ ├── events/ # Socket.IO event handlers
 
-
-
 │ ├── lib/ # Core libraries
-
-
 
 │ ├── middlewares/ # Express middlewares
 
-
-
 │ ├── routes/ # API routes
-
-
 
 │ ├── schema/ # Database schema
 
-
-
 │ ├── types/ # TypeScript type definitions
-
-
 
 │ ├── utils/ # Utility functions
 
-
-
 │ └── server.ts # Main application entry
-
-
 
 ├── public/ # Static files
 
-
-
 ├── drizzle.config.ts # Drizzle ORM configuration
-
-
 
 ├── tsconfig.json # TypeScript configuration
 
-
-
 └── package.json # Project dependencies
-
-
 
 ```
 

@@ -12,9 +12,9 @@ interface IOverRideOptions
 }
 
 const options: IRateLimiterStoreNoAutoExpiryOptions = {
+  dbName: env.DATABASE_NAME,
   storeClient: connection,
   tableName: "throttle",
-  dbName: env.database,
   blockDuration: 10, // seconds
   storeType: "pg",
   keyPrefix: "",

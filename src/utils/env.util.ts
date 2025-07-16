@@ -18,7 +18,7 @@ const schemaObject = z.object({
   BREVO_API_KEY: z.string(),
   BREVO_SENDER: z.string(),
   JWT_SECRET: z.string(),
-  database: z.string(),
+  DATABASE_NAME: z.string(),
 });
 
 const envSchema = schemaObject.safeParse(process.env);
