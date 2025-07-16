@@ -16,6 +16,7 @@ const schemaObject = z.object({
   BACKEND_DOMAIN: z.string(),
   COOKIE_SECRET: z.string(),
   BREVO_API_KEY: z.string(),
+  BREVO_SENDER: z.string(),
   JWT_SECRET: z.string(),
   database: z.string(),
 });

@@ -1,7 +1,3 @@
-Template:
-@: Do something about the session socket.middleware.ts, perhapse create a custom middleware with the help of auth.api.      
-   getSession and combine with socket.io  
-
 Signup
 Limit: 2–5 requests per hour
 Reason: Avoid spam account creation while allowing legitimate registrations.

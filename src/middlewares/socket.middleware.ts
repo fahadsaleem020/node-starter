@@ -1,17 +1,30 @@
-import { NextFunction, Response, type Request } from "express";
-import { IO, type RequestWithIO } from "@/types/socket";
-import type { Socket } from "socket.io";
+import type { NextFunction, Response, Request } from "express";
+import type { Socket, ExtendedError } from "socket.io";
+import { getSession } from "@/utils/getsession.util";
+import { logger } from "@/utils/logger.util";
+import { IO } from "@/types/socket.types";
 
 export const assignSocketToReqIO = (io: IO) => {
   return (req: Request, _: Response, next: NextFunction) => {
-    (req as RequestWithIO).io = io;
+    req.io = io;
     next();
   };
 };
 
-//! This needs to be changed
-export const authorizeUser = (socket: Socket, next: (error?: any) => void) => {
-  const request = socket.request as unknown as Express.Request;
-  const passport = (request.session as any)?.passport;
-  passport?.user && next();
+export const connAuthBridge = async (
+  socket: Socket,
+  next: (error?: ExtendedError) => void
+) => {
+  const sessionId: string | null = socket.handshake.auth.sessionId;
+  const session = await getSession(socket.request);
+
+  if (session && sessionId) {
+    socket.session = session;
+    socket.join(session.user.id);
+    logger.info("Socket handshake successfull");
+    next();
+  } else {
+    logger.error("Socket handshake failure");
+    next(new Error("Socket handshake failure: missing sessionId"));
+  }
 };

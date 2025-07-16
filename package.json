@@ -11,7 +11,8 @@
     "dbstudio": "drizzle-kit studio --port 5000 --host localhost",
     "dbdrop": "drizzle-kit drop",
     "dbintrospect": "drizzle-kit introspect",
-    "swagger": "ts-node ./src/configs/swagger.config.ts"
+    "swagger": "ts-node ./src/configs/swagger.config.ts",
+    "tailwind": "npx @tailwindcss/cli -i ./public/input.css -o ./public/output.css --watch"
   },
   "license": "ISC",
   "devDependencies": {
@@ -19,7 +20,6 @@
     "@types/cookie-parser": "^1.4.4",
     "@types/cors": "^2.8.14",
     "@types/express": "^5.0.3",
-    "@types/express-session": "^1.17.8",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.5",
@@ -33,18 +33,19 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^2.5.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@types/swagger-jsdoc": "^6.0.2",
     "axios": "^1.5.1",
     "bcrypt": "^6.0.0",
     "better-auth": "^1.2.10",
+    "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.8.2",
     "express": "^5.1.0",
-    "express-session": "^1.17.3",
     "formidable": "^3.5.4",
     "helmet": "^8.1.0",
     "http-status": "^2.1.0",
@@ -58,6 +59,7 @@
     "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "tailwindcss": "^4.1.11",
     "tsc-alias": "^1.8.8"
   }
 }

@@ -1,10 +1,10 @@
 import { type IRateLimiterStoreNoAutoExpiryOptions } from "rate-limiter-flexible";
 import { RateLimiterPostgres, RateLimiterMemory } from "rate-limiter-flexible";
-import { database, connection } from "../configs/connection.config";
+import { database, connection } from "@/configs/connection.config";
 import { throttleinsight } from "@/schema/schema";
 import type { RequestHandler } from "express";
+import { env } from "@/utils/env.util";
 import { status } from "http-status";
-import { env } from "@/utils/env.utils";
 
 interface IOverRideOptions
   extends Omit<IRateLimiterStoreNoAutoExpiryOptions, "storeClient"> {

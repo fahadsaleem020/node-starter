@@ -2,7 +2,7 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "@/schema/schema";
-import { env } from "@/utils/env.utils";
+import { env } from "@/utils/env.util";
 import { Pool } from "pg";
 
 export const database = drizzle(env.CONNECTION_URL, {
