@@ -64,7 +64,7 @@ A robust, feature-rich Express.js backend template built with TypeScript, design
 
 ```bash
 
-git  clone  <repository-url>
+git  clone https://github.com/fahadsaleem020/node-starter.git
 
 cd  node-started
 
