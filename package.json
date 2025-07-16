@@ -2,6 +2,8 @@
   "name": "starter",
   "version": "1.0.0",
   "main": "index.js",
+  "author": "Fahad",
+  "repository": "https://github.com/fahadsaleem020/node-starter.git",
   "scripts": {
     "build": "tsc && tsc-alias && npm run dbgenerate",
     "dev": "ts-node-dev -r tsconfig-paths/register src/server.ts",
